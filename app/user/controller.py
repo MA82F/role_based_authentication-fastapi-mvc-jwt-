@@ -14,7 +14,9 @@ router = APIRouter()
 
 
 @router.get("/profile", response_model=UserResponse)
-async def get_user_profile(current_user: User = Depends(get_current_user)):
+async def get_user_profile(
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
     """Get current user's profile"""
     return current_user
 
@@ -25,7 +27,7 @@ async def get_all_users(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
-):
+) -> List[UserResponse]:
     """Get all users (Admin only)"""
     users = UserService.get_all_users(db, skip=skip, limit=limit)
     return users
@@ -37,7 +39,7 @@ async def update_user(
     user_data: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
-):
+) -> UserResponse:
     """Update user (Admin only)"""
     updated_user = UserService.update_user(db, user_id, user_data)
     if not updated_user:

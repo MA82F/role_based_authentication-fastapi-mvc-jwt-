@@ -16,9 +16,3 @@ class Feedback(Base):
 
     # Relationship
     user = relationship("User", back_populates="feedback")
-
-
-# Add relationship to User model (we'll update this later)
-from app.user.model import User
-
-User.feedback = relationship("Feedback", back_populates="user")

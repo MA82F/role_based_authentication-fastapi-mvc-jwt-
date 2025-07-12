@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.security import create_access_token, verify_password
+from app.user.model import User
 from app.user.schemas import UserCreate
 from app.user.service import UserService
 
@@ -14,7 +15,7 @@ from .schemas import LoginRequest, TokenResponse
 class AuthService:
 
     @staticmethod
-    def register_user(db: Session, user_data: UserCreate):
+    def register_user(db: Session, user_data: UserCreate) -> User:
         """Register a new user"""
         # Check if user already exists
         if UserService.get_user_by_username(db, user_data.username):

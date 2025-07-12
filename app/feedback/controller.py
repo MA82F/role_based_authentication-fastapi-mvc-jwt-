@@ -20,7 +20,7 @@ async def submit_feedback(
     feedback_data: FeedbackCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-):
+) -> FeedbackResponse:
     """Submit feedback (User access required)"""
     feedback = FeedbackService.create_feedback(db, feedback_data, current_user.id)
     return feedback
@@ -32,14 +32,14 @@ async def get_all_feedback(
     limit: int = 100,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
-):
+) -> List[FeedbackWithUser]:
     """Get all feedback (Admin only)"""
     feedback_list = FeedbackService.get_all_feedback(db, skip=skip, limit=limit)
     return feedback_list
 
 
 @router.get("/feedback/summary", response_model=FeedbackSummary)
-async def get_feedback_summary(db: Session = Depends(get_db)):
+async def get_feedback_summary(db: Session = Depends(get_db)) -> FeedbackSummary:
     """Get feedback summary (Public access)"""
     summary = FeedbackService.get_feedback_summary(db)
     return summary

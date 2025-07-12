@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -18,7 +19,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create JWT access token"""
     to_encode = data.copy()
     if expires_delta:
@@ -35,7 +36,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 
-def verify_token(token: str):
+def verify_token(token: str) -> Optional[dict]:
     """Verify and decode JWT token"""
     try:
         payload = jwt.decode(

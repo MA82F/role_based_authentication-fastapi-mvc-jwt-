@@ -18,7 +18,7 @@ async def update_user_role(
     role_data: RoleUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_admin),
-):
+) -> UserResponse:
     """Update user role (Admin only)"""
     updated_user = RoleService.update_user_role(db, user_id, role_data)
     return updated_user
