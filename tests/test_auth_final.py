@@ -10,12 +10,12 @@ class TestAuthModule:
         user_data = {
             "username": "newuser",
             "email": "newuser@example.com",
-            "password": "password123"
+            "password": "password123",
         }
-        
+
         async with client as c:
             response = await c.post("/auth/signup", json=user_data)
-            
+
             assert response.status_code == 201
             data = response.json()
             assert data["username"] == user_data["username"]
@@ -32,14 +32,14 @@ class TestAuthModule:
         user_data = {
             "username": "duplicate",
             "email": "first@example.com",
-            "password": "password123"
+            "password": "password123",
         }
-        
+
         async with client as c:
             # First signup
             response1 = await c.post("/auth/signup", json=user_data)
             assert response1.status_code == 201
-            
+
             # Second signup with same username
             user_data["email"] = "second@example.com"
             response2 = await c.post("/auth/signup", json=user_data)
@@ -51,14 +51,14 @@ class TestAuthModule:
         user_data = {
             "username": "user1",
             "email": "duplicate@example.com",
-            "password": "password123"
+            "password": "password123",
         }
-        
+
         async with client as c:
             # First signup
             response1 = await c.post("/auth/signup", json=user_data)
             assert response1.status_code == 201
-            
+
             # Second signup with same email
             user_data["username"] = "user2"
             response2 = await c.post("/auth/signup", json=user_data)
@@ -70,15 +70,15 @@ class TestAuthModule:
         async with client as c:
             # First create user
             await c.post("/auth/signup", json=test_user_data)
-            
+
             # Then login
             login_data = {
                 "username": test_user_data["username"],
-                "password": test_user_data["password"]
+                "password": test_user_data["password"],
             }
-            
+
             response = await c.post("/auth/login", json=login_data)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert "access_token" in data
@@ -92,19 +92,22 @@ class TestAuthModule:
         async with client as c:
             # Create user
             await c.post("/auth/signup", json=test_user_data)
-            
+
             # Try login with wrong username
-            response1 = await c.post("/auth/login", json={
-                "username": "wronguser",
-                "password": test_user_data["password"]
-            })
+            response1 = await c.post(
+                "/auth/login",
+                json={"username": "wronguser", "password": test_user_data["password"]},
+            )
             assert response1.status_code == 401
-            
+
             # Try login with wrong password
-            response2 = await c.post("/auth/login", json={
-                "username": test_user_data["username"],
-                "password": "wrongpassword"
-            })
+            response2 = await c.post(
+                "/auth/login",
+                json={
+                    "username": test_user_data["username"],
+                    "password": "wrongpassword",
+                },
+            )
             assert response2.status_code == 401
 
     @pytest.mark.asyncio
@@ -114,11 +117,11 @@ class TestAuthModule:
             # Missing password
             response1 = await c.post("/auth/login", json={"username": "test"})
             assert response1.status_code == 422
-            
+
             # Missing username
             response2 = await c.post("/auth/login", json={"password": "test"})
             assert response2.status_code == 422
-            
+
             # Empty body
             response3 = await c.post("/auth/login", json={})
             assert response3.status_code == 422

@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class FeedbackBase(BaseModel):
@@ -16,7 +17,7 @@ class FeedbackResponse(FeedbackBase):
     id: int
     user_id: int
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 

@@ -19,15 +19,18 @@ class TestJWTProtectedRoutes:
             response = await c.get("/user/profile", headers=headers)
             assert response.status_code == 401
 
-    @pytest.mark.asyncio 
+    @pytest.mark.asyncio
     async def test_protected_route_with_valid_token(self, client, authenticated_user):
         """Test accessing protected route with valid JWT token"""
         async with client as c:
-            headers = await authenticated_user(c, {
-                "username": "testuser",
-                "email": "test@example.com", 
-                "password": "testpassword123"
-            })
+            headers = await authenticated_user(
+                c,
+                {
+                    "username": "testuser",
+                    "email": "test@example.com",
+                    "password": "testpassword123",
+                },
+            )
             response = await c.get("/user/profile", headers=headers)
             assert response.status_code == 200
             data = response.json()
